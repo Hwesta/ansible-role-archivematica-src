@@ -88,7 +88,7 @@
 - name: "Create virtualenv for archivematica-storage-service, pip install requirements"
   pip:
     chdir: "{{ archivematica_src_dir }}/archivematica-storage-service"
-    requirements: "requirements.txt"
+    requirements: "{{ 'requirements.txt' if is_prod else 'requirements/test.txt' }}"
     virtualenv: "/usr/share/python/archivematica-storage-service"
     extra_args: "--find-links lib"
     state: "latest"
