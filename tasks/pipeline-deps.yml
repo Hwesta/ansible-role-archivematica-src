@@ -131,9 +131,32 @@
   stat:
     path: "{{ archivematica_src_dir }}/archivematica/src/MCPClient/requirements.txt"
   register: "requirements_file"
+  tags: "python3"
 
 - name: "Install archivematica-mcp-client pip dependencies"
   pip:
     requirements: "{{ archivematica_src_dir }}/archivematica/src/MCPClient/requirements.txt"
     state: "latest"
   when: "requirements_file.stat.exists is defined and requirements_file.stat.exists"
+
+# # Python3 dependencies
+
+- name: "Install pip for python3 & system dependencies"
+  apt:
+    pkg: "{{ item }}"
+    state: "latest"
+  with_items:
+    - "python3-pip"
+    - "python-libxml2"
+  tags: "python3"
+
+- name: "Install archivematica-mcp-client pip dependencies (python3)"
+  pip:
+    requirements: "{{ archivematica_src_dir }}/archivematica/src/MCPClient/requirements.txt"
+    state: "latest"
+    executable: pip3
+  when: "requirements_file.stat.exists is defined and requirements_file.stat.exists"
+  become: "yes"
+  tags: "python3"
+
+
